@@ -120,38 +120,32 @@ namespace EleunameBotConsole
 
                 #region Points stuff
                 case "givepoints":
-                    if (e.Command.ChatMessage.IsBroadcaster)
+                    if (e.Command.ChatMessage.IsBroadcaster && e.Command.ArgumentsAsList.Count != 0)
                     {
-                        if (e.Command.ArgumentsAsList.Count != 0)
+                        int given = int.Parse(e.Command.ArgumentsAsList[1]);
+                        if (given < 0)
                         {
-                            int given = int.Parse(e.Command.ArgumentsAsList[1]);
-                            if (given < 0)
-                            {
-                                client.SendMessage(client.JoinedChannels[0], $"{e.Command.ArgumentsAsList[1]} points have been taken from {e.Command.ArgumentsAsList[0]}");
-                                DatabaseHandler.ExecuteNonQuery($"INSERT IGNORE INTO Users (username,points) values ('{e.Command.ArgumentsAsList[0].ToLower()}', {e.Command.ArgumentsAsList[1]}); UPDATE Users SET points = points + {e.Command.ArgumentsAsList[1]} WHERE username='{e.Command.ArgumentsAsList[0]}'");
-                            }
-                            else
-                            {
-                                client.SendMessage(client.JoinedChannels[0], $"{e.Command.ArgumentsAsList[1]} points have been awarded to {e.Command.ArgumentsAsList[0]}");
-                                DatabaseHandler.ExecuteNonQuery($"INSERT IGNORE INTO Users (username,points) values ('{e.Command.ArgumentsAsList[0].ToLower()}', {e.Command.ArgumentsAsList[1]}); UPDATE Users SET points = points + {e.Command.ArgumentsAsList[1]} WHERE username='{e.Command.ArgumentsAsList[0]}'");
-                            }
+                            client.SendMessage(client.JoinedChannels[0], $"{e.Command.ArgumentsAsList[1]} points have been taken from {e.Command.ArgumentsAsList[0]}");
+                            DatabaseHandler.ExecuteNonQuery($"INSERT IGNORE INTO Users (username,points) values ('{e.Command.ArgumentsAsList[0].ToLower()}', {e.Command.ArgumentsAsList[1]}); UPDATE Users SET points = points + {e.Command.ArgumentsAsList[1]} WHERE username='{e.Command.ArgumentsAsList[0]}'");
+                        }
+                        else
+                        {
+                            client.SendMessage(client.JoinedChannels[0], $"{e.Command.ArgumentsAsList[1]} points have been awarded to {e.Command.ArgumentsAsList[0]}");
+                            DatabaseHandler.ExecuteNonQuery($"INSERT IGNORE INTO Users (username,points) values ('{e.Command.ArgumentsAsList[0].ToLower()}', {e.Command.ArgumentsAsList[1]}); UPDATE Users SET points = points + {e.Command.ArgumentsAsList[1]} WHERE username='{e.Command.ArgumentsAsList[0]}'");
                         }
                     }
                     break;
                 case "getpoints":
                     {
-                        if (e.Command.ArgumentsAsList.Count != 0)
+                        if (e.Command.ArgumentsAsList.Count != 0 && !e.Command.ArgumentsAsList[0].Contains(";"))
                         {
-                            if (!e.Command.ArgumentsAsList[0].Contains(";"))
-                            {
-                                MySqlConnection cnn;
-                                cnn = new MySqlConnection(DatabaseHandler.myConnectionString);
-                                cnn.Open();
-                                int points = 0;
-                                points = int.Parse(DatabaseHandler.ScalarCommand($"SELECT points FROM Users WHERE username = '{e.Command.ArgumentsAsList[0].ToLower()}';"));
-                                client.SendMessage(client.JoinedChannels[0], $"{e.Command.ArgumentsAsList[0].ToLower()} has " + points + " points.");
-                                cnn.Close();
-                            }
+                            MySqlConnection cnn;
+                            cnn = new MySqlConnection(DatabaseHandler.myConnectionString);
+                            cnn.Open();
+                            int points = 0;
+                            points = int.Parse(DatabaseHandler.ScalarCommand($"SELECT points FROM Users WHERE username = '{e.Command.ArgumentsAsList[0].ToLower()}';"));
+                            client.SendMessage(client.JoinedChannels[0], $"{e.Command.ArgumentsAsList[0].ToLower()} has " + points + " points.");
+                            cnn.Close();
                         }
                         else
                         {

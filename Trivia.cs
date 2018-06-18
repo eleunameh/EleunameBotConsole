@@ -32,10 +32,7 @@ namespace EleunameBotConsole
         #endregion
         public static void AnswerQuestion(string winner)
         {
-            if (!WaitingOnAnswer)
-                return;
-            else
-            {
+            if (WaitingOnAnswer)
                 WaitingOnAnswer = false;
                 Winner = winner;
             }
