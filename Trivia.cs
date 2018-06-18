@@ -1,3 +1,5 @@
+//this class is messy because it's taken and re-adapted from one of my old projects, but it works fine so I'm okay with it.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ using MySql.Data.MySqlClient;
 
 namespace EleunameBotConsole
 {
-    public abstract class Trivia //this class is messy because it's taken and re-adapted from one of my old projects, but it works fine so I'm okay with it.
+    public abstract class Trivia 
     {
         #region Variables
         public static bool WaitingOnAnswer = false;
